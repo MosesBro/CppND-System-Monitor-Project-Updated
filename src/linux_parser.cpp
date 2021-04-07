@@ -113,8 +113,24 @@ long LinuxParser::ActiveJiffies() { return 0; }
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; }
 
-// TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+// DONE: Read and return CPU utilization
+vector<string> LinuxParser::CpuUtilization() {
+  string line, token;
+  vector<string> values{};
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    if (std::getline (filestream, line)) {
+      std::stringstream linestream(line);
+      linestream >> token;
+      if (token == "cpu") {
+        while (linestream >> token) {
+          values.push_back(token);
+        }
+      }
+    }
+  }
+  return values;
+}
 
 // DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
