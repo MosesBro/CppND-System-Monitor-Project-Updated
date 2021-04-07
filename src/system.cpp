@@ -16,7 +16,11 @@ using std::vector;
 
 System::System() { this->cpu_ = Processor(); }
 
+<<<<<<< HEAD
 // DONE: Return the system's CPU
+=======
+// TODO: Return the system's CPU
+>>>>>>> a74b46f82a53b951901df208d9644779a6c73d12
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
