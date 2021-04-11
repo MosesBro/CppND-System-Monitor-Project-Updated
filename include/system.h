@@ -9,7 +9,6 @@
 
 class System {
  public:
-  // System();
   Processor& Cpu();                   // DONE: See src/system.cpp
   std::vector<Process>& Processes();  // TODO: See src/system.cpp
   float MemoryUtilization();          // DONE: See src/system.cpp

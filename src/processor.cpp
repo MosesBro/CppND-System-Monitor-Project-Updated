@@ -53,6 +53,7 @@ float Processor::Utilization() {
     // totald = Total - PrevTotal
     // idled = Idle - PrevIdle
     float totald = Total - PrevTotal;
+    totald == 0 ? totald = 1 : totald;     // make sure we don't divide by zero
     float idled = Idle - PrevIdle;
     float CPU_Percentage = (totald - idled)/ totald;
 
