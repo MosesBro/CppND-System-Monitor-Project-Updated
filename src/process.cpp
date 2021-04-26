@@ -15,34 +15,7 @@ using std::vector;
 int Process::Pid() { return this->pid; }
 
 // DONE: Return this process's CPU utilization
-float Process::CpuUtilization() {
-  string line, token;
-  std::ifstream filestream(LinuxParser::kProcDirectory + std::to_string(this->pid) + LinuxParser::kStatFilename);
-  if (filestream.is_open()) {
-    if (std::getline (filestream, line)) {
-      std::stringstream linestream(line);
-      procCPUvalues.clear();
-      while (linestream >> token) {
-        this->procCPUvalues.push_back(atol(token.c_str()));
-      }
-    }
-  }
-  long utime = procCPUvalues[13];      // #14 utime - CPU time spent in user code, measured in clock ticks
-  long stime = procCPUvalues[14];      // #15 stime - CPU time spent in kernel code, measured in clock ticks
-  long cutime = procCPUvalues[15];     // #16 cutime - Waited-for children's CPU time spent in user code (in clock ticks)
-  long cstime = procCPUvalues[16];     // #17 cstime - Waited-for children's CPU time spent in kernel code (in clock ticks)
-  long starttime = procCPUvalues[21];  // #22 starttime - Time when the process started, measured in clock ticks
-
-  long Hertz = sysconf(_SC_CLK_TCK);
-
-  long total_time = utime + stime + cutime + cstime;
-
-  float seconds = LinuxParser::UpTime() - (starttime / Hertz);
-
-  float cpu_usage = 100 * ((total_time / Hertz) / seconds);
-
-  return cpu_usage;
-}
+float Process::CpuUtilization() const { return this->cpu_usage; }
 
 // DONE: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(this->pid); }
@@ -58,4 +31,10 @@ long int Process::UpTime() { return 0; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const { 
+  return this->CpuUtilization() < a.CpuUtilization();
+}
+
+bool Process::operator>(Process const& a) const { 
+  return this->CpuUtilization() > a.CpuUtilization();
+}
