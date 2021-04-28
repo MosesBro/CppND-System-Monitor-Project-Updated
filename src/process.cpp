@@ -15,7 +15,15 @@ using std::vector;
 int Process::Pid() { return this->pid; }
 
 // DONE: Return this process's CPU utilization
-float Process::CpuUtilization() const { return this->cpu_usage; }
+float Process::CpuUtilization() const { return this->cpu_usage_; }
+
+void Process::CpuUtilization(long active_ticks, long system_ticks) {
+  long duration_active{active_ticks - cached_active_ticks_};
+  long duration{system_ticks - cached_system_ticks_};
+  cpu_usage_ = static_cast<float>(duration_active) / duration;
+  cached_active_ticks_ = active_ticks;
+  cached_system_ticks_ = system_ticks;
+}
 
 // DONE: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(this->pid); }
@@ -27,7 +35,7 @@ string Process::Ram() { return LinuxParser::Ram(this->pid); }
 string Process::User() { return LinuxParser::User(this->pid); }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+long int Process::UpTime() { return LinuxParser::UpTime(this->pid); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
